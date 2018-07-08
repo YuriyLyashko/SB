@@ -1,0 +1,7 @@
+pip 9.0.3
+numpy 1.12.1
+selenium 3.7.0
+python3-xlib
+PyAutoGUI 0.9.36
+html-testRunner 1.1.1
+natsort 5.3.3
