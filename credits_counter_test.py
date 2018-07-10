@@ -10,16 +10,19 @@ link_to_game = 'http://slotmachinescript.com/'
 class Page:
     def __init__(self, driver):
         self.spin_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'spinButton')))
-        self.last_win = 0
-        for sec in range(13):
-            print(sec)
-            try:
-                self.last_win = int(driver.find_element_by_id('lastWin').text)
-                if self.last_win:
-                    break
-            except:
-                self.last_win = 0
-            time.sleep(1)
+        time.sleep(5)
+        self.slots_outer_container = driver.find_element_by_id('SlotsOuterContainer')
+        if self.slots_outer_container.get_attribute("class"):
+            while True:
+                try:
+                    self.last_win = int(driver.find_element_by_id('lastWin').text)
+                    if self.last_win:
+                        break
+                except:
+                    continue
+                time.sleep(1)
+        else:
+            self.last_win = 0
         self.total_spins = int(driver.find_element_by_id('credits').text)
         self.bet = int(driver.find_element_by_id('bet').text)
         self.bet_spin_up = driver.find_element_by_id('betSpinUp')
@@ -46,7 +49,6 @@ class UITests(unittest.TestCase):
         self.prev_total_spins = self.page.total_spins
         self.page.spin_button.click()
         self.page = Page(self.driver)
-        print('first spin: ', self.prev_total_spins, self.page.bet, self.page.last_win, self.page.total_spins)
 
         '''BET changing'''
         for _ in range(2):
@@ -57,19 +59,14 @@ class UITests(unittest.TestCase):
         self.page.spin_button.click()
         self.page = Page(self.driver)
         with self.subTest():
-            print('first spin with 3: ', self.prev_total_spins, self.page.bet, self.page.last_win, self.page.total_spins)
             self.assertTrue(self.prev_total_spins - self.page.bet + self.page.last_win == self.page.total_spins)
 
         '''play until win'''
         self.page.last_win = 0
-
         while not self.page.last_win:
             self.prev_total_spins = self.page.total_spins
             self.page.spin_button.click()
             self.page = Page(self.driver)
-            print('while spin: ', self.prev_total_spins, self.page.bet, self.page.last_win, self.page.total_spins)
-
-        print(self.prev_total_spins, self.page.bet, self.page.last_win, self.page.total_spins)
         self.assertTrue(self.prev_total_spins - self.page.bet + self.page.last_win == self.page.total_spins)
 
     def tearDown(self):
