@@ -1,4 +1,3 @@
 pip 9.0.3
 numpy 1.12.1
-selenium 3.7.0
-python3-xlib
+selenium 3.13.0
