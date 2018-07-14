@@ -1,8 +1,5 @@
 import os, time, unittest, warnings
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 link_to_game = 'http://slotmachinescript.com/'
@@ -25,6 +22,7 @@ class Page:
         while True:
             if not self.spin_button.get_attribute("class"):
                 break
+            time.sleep(0.5)
 
 
 class UITests(unittest.TestCase):
